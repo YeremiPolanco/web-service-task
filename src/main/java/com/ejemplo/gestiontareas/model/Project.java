@@ -3,32 +3,42 @@ package com.ejemplo.gestiontareas.model;
 
 import java.util.Date;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Table(name = "project")
 public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
+    @Size(min = 3, max = 30)
+    @Column(unique = true, nullable = false)
     private String name;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.INITIATION;
+
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false)
-    private User owner;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Temporal(TemporalType.DATE)
-    private Date dateCreated;
+    private Date dateCreated = new Date();
 
     @Temporal(TemporalType.DATE)
     private Date dateStarted;
@@ -36,68 +46,12 @@ public class Project {
     @Temporal(TemporalType.DATE)
     private Date dateFinished;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
+
+    public enum Status {
+        INITIATION,
+            IN_PROGRESS,
+        COMPLETED;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Date getDateStarted() {
-        return dateStarted;
-    }
-
-    public void setDateStarted(Date dateStarted) {
-        this.dateStarted = dateStarted;
-    }
-
-    public Date getDateFinished() {
-        return dateFinished;
-    }
-
-    public void setDateFinished(Date dateFinished) {
-        this.dateFinished = dateFinished;
-    }
 }
